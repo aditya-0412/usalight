@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LED Collections</title>
+    <style>
+      :root {
+        --sidebar-width: 260px;
+        --gap: 20px;
+        --bg: #fafafa;
+        --muted: #666;
+        --card-radius: 12px;
+        --shadow-subtle: 0 6px 18px rgba(15, 15, 15, 0.06);
+        --accent: #ff4757;
+        --btn-color: #cd3838;
+        --btn-hover: #d65353;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: var(--bg);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+        height: auto;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      p {
+        margin-bottom: 1em;
+      }
+      .bold {
+        background: rgba(216, 216, 216, 0.5);
+        padding: 1.5rem;
+        border-radius: var(--card-radius);
+        border-left: 4px solid var(--accent);
+        font-weight: 600;
+      }
+
+      .page {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1fr;
+        gap: var(--gap);
+        padding: 20px;
+        max-width: 1300px;
+        margin: 0 auto;
+        min-height: 100vh;
+      }
+
+      aside.reserved {
+        background: #ddd;
+        border-radius: 10px;
+        padding: 2rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        position: sticky;
+        top: 28px;
+        min-height: 300px;
+        text-align: center;
+      }
+
+      main.main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .hero {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: var(--card-radius);
+        margin-bottom: 1rem;
+      }
+
+      .title-block h1 {
+        font-size: clamp(2rem, 5vw, 3rem);
+        color: #b2ad9c;
+        margin: 0 0 0.5rem;
+      }
+      .title-block h3 {
+        margin: 0 0 1rem;
+        font-weight: 400;
+        font-size: 1.2rem;
+      }
+
+      /* Grid Cards */
+      .grid {
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: repeat(3, 1fr); /* Desktop default: 3 cards */
+      }
+
+      .product-card {
+        background: #fff;
+        border-radius: var(--card-radius);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-shadow: var(--shadow-subtle);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.3s ease,
+          border-color 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .product-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 71, 87, 0.12),
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
+      }
+
+      .product-card:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        border-color: var(--accent);
+      }
+
+      .product-card:hover::before {
+        opacity: 1;
+      }
+
+      .product-media {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .product-title {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+      .product-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+
+      .btn {
+        margin-top: auto;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background: var(--btn-color);
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn:hover {
+        background: var(--btn-hover);
+        animation: pulse 0.6s ease-in-out;
+      }
+      .btn:hover::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        animation: shine 0.8s ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.01);
+        }
+      }
+      @keyframes shine {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .collection-description {
+        font-size: 0.9375rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* Tablet */
+      @media (max-width: 1024px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .page {
+          grid-template-columns: 1fr;
+          padding: 16px;
+        }
+        aside.reserved {
+          position: relative;
+          min-height: 80px;
+          margin-bottom: 30px;
+        }
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+        .product-card {
+          padding: 0.8rem;
+        }
+        .product-media {
+          aspect-ratio: 1.5/1;
+        } /* slightly smaller for mobile */
+        .product-title {
+          font-size: 1rem;
+        }
+        .product-sub {
+          font-size: 0.75rem;
+        }
+        .btn {
+          font-size: 0.75rem;
+          padding: 0.4rem 0.8rem;
+        }
+      }
+
+      /* Extra small mobile */
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.8rem;
+        }
+        .product-card {
+          padding: 0.6rem;
+        }
+        .product-media {
+          aspect-ratio: 1.5/1;
+        }
+        .product-title {
+          font-size: 0.95rem;
+        }
+        .product-sub {
+          font-size: 0.7rem;
+        }
+        .btn {
+          font-size: 0.7rem;
+          padding: 0.35rem 0.7rem;
+        }
+      }
+      /* MRP Styling */
+      .product-mrp {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--accent);
+        margin: 4px 0;
+      }
+
+      /* Color Options */
+      .color-options {
+        display: flex;
+        gap: 6.4px;
+        margin-bottom: 8px;
+        position: relative;
+        cursor: pointer;
+        max-width: fit-content;
+      }
+
+      .color-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .color-dot:hover {
+        transform: scale(1.3);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* More colors indicator */
+      .more-colors {
+        background: #ddd;
+        color: #333;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .more-colors:hover {
+        transform: scale(1.2);
+        background: var(--accent);
+        color: #fff;
+      }
+
+      /* Optional: show tooltip on hover */
+      .color-options:hover::after {
+        content: "Wider range of shades!";
+        position: absolute;
+        top: -28px;
+        left: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <aside class="reserved">Filtration Module</aside>
+      <main class="main">
+        <img
+          class="hero"
+          src="https://cdn4.volusion.store/sjrzx-uggtc/v/vspfiles/photos/categories/1814.jpg?v-cache=1728158450"
+          alt="Image Banner"
+        />
+
+        <div class="title-block">
+          <h1>RECESSED AND SURFACE MOUNT LIGHTING</h1>
+          <h3>
+            Recessed Lighting - Commercial & Residential Solutions for Every
+            Space
+          </h3>
+          <p>
+            Discover our premium selection of
+            <strong>Commercial & Residential</strong> Recessed Lighting from
+            sleek low-profile fixtures to powerful
+            <strong>commercial-grade downlights</strong>. Designed for
+            effortless installation, energy efficiency, and timeless appeal, our
+            solutions transform any ceiling into a statement of modern elegance.
+          </p>
+          <p class="bold">
+            For additional help you can refer to our Recessed Lighting 101
+            article or contact our Customer Service department for help with
+            design or purchasing decisions M-F 6:30AM to 3:30PM PST.
+          </p>
+        </div>
+
+        <section>
+          <h2>SHOWCASE</h2>
+          <div class="grid">
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-11.jpg"
+                alt="LED Recessed Downlights"
+              />
+              <h3 class="product-title">LED Recessed Downlights</h3>
+              <p class="product-sub">Slim design, high CRI</p>
+              <p class="product-mrp">Starting at just $45.00</p>
+              <div class="color-options">
+                <span class="color-dot" style="background: #ebc277"></span>
+                <span class="color-dot" style="background: #b1a984"></span>
+                <span class="color-dot" style="background: #5f778f"></span>
+                <span class="color-dot more-colors">+3</span>
+              </div>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-12.jpg"
+                alt="Two Inch Recessed Lighting"
+              />
+              <h3 class="product-title">Two Inch Recessed Lighting</h3>
+              <p class="product-sub">Adjustable, wet-rated</p>
+              <p class="product-mrp">Starting at just $30.00</p>
+              <div class="color-options">
+                <span class="color-dot" style="background: #ebc277"></span>
+                <span class="color-dot" style="background: #b1a984"></span>
+                <span class="color-dot" style="background: #5f778f"></span>
+                <span class="color-dot more-colors">+5</span>
+              </div>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-13.jpg"
+                alt="Three Inch Recessed Lighting"
+              />
+              <h3 class="product-title">Three Inch Recessed Lighting</h3>
+              <p class="product-sub">Precision optics, trim options</p>
+              <p class="product-mrp">Starting at just $50.00</p>
+              <div class="color-options">
+                <span class="color-dot" style="background: #ebc277"></span>
+                <span class="color-dot" style="background: #b1a984"></span>
+                <span class="color-dot" style="background: #5f778f"></span>
+                <span class="color-dot more-colors">+2</span>
+              </div>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-14.jpg"
+                alt="Four Inch Recessed Lighting"
+              />
+              <h3 class="product-title">Four Inch Recessed Lighting</h3>
+              <p class="product-sub">Precision optics, trim options</p>
+              <p class="product-mrp">Starting at just $70.00</p>
+              <div class="color-options">
+                <span class="color-dot" style="background: #ebc277"></span>
+                <span class="color-dot" style="background: #b1a984"></span>
+                <span class="color-dot" style="background: #5f778f"></span>
+                <span class="color-dot more-colors">+4</span>
+              </div>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-15.jpg"
+                alt="Five Inch Recessed Lighting"
+              />
+              <h3 class="product-title">Five Inch Recessed Lighting</h3>
+              <p class="product-sub">Precision optics, trim options</p>
+              <p class="product-mrp">Starting at just $40.00</p>
+              <div class="color-options">
+                <span class="color-dot" style="background: #ebc277"></span>
+                <span class="color-dot" style="background: #b1a984"></span>
+                <span class="color-dot" style="background: #5f778f"></span>
+                <span class="color-dot more-colors">+3</span>
+              </div>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+            <div class="product-card">
+              <img
+                class="product-media"
+                src="https://www.usalight.com/v/vspfiles/assets/images/USA%20Light%20Category%20Interior-16.jpg"
+                alt="Six Inch Recessed Lighting"
+              />
+              <h3 class="product-title">Six Inch Recessed Lighting</h3>
+              <p class="product-sub">Precision optics, trim options</p>
+              <a href="#" class="btn">Take a closer look</a>
+            </div>
+          </div>
+        </section>
+
+        <div class="text-block">
+          <p>
+            Browse an extensive collection of
+            <strong>top-quality products from leading manufacturers,</strong>
+            designed for superior performance, energy efficiency, and seamless
+            installation. Choose from a variety of
+            <strong>trim styles, finishes, and color temperatures</strong> to
+            complement any modern, transitional, or traditional space, and
+            <strong>let it enhance your entire environment </strong> with
+            professional-grade recessed lighting solutions for every project.
+          </p>
+          <p>
+            When it comes to lighting solutions, USA Light offers the best
+            recessed lighting for both commercial and residential applications.
+            Our modern recessed lighting fixtures deliver sleek aesthetics while
+            providing optimal illumination to enhance the ambiance of any space.
+          </p>
+          <p>
+            As a trusted commercial lighting company, we understand the
+            importance of effective lighting in professional settings. Our
+            recessed lights are designed to meet the demands of offices, retail
+            spaces, and restaurants, offering energy-efficient options that help
+            reduce operating costs. For residential projects, our fixtures
+            include dimmable features that allow you to create the perfect
+            atmosphere for any occasion, from cozy family gatherings to elegant
+            dinner parties.
+          </p>
+          <p>
+            With various sizes, styles, and finishes available, USA Light
+            ensures you have the ideal recessed lighting solutions to suit your
+            design needs. Elevate your projects with our exceptional products
+            that combine modern elegance, functionality, and outstanding
+            performance. Transform your spaces today!
+          </p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
